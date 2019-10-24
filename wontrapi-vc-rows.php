@@ -1,19 +1,19 @@
 <?php 
 /**
- * Plugin Name: Wontrapi Extension Demo
- * Plugin URI:  https://github.com/oakwoodgates/wontrapi-extension-demo
- * Description: 
+ * Plugin Name: Wontrapi VC Rows
+ * Plugin URI:  https://github.com/oakwoodgates/wontrapi-vc-rows
+ * Description: Hide Visual Composer rows based on a contact's tags in Ontraport
  * Version:     0.1.0
  * Author:      OakwoodGates
  * Author URI:  https://wpguru4u.com
- * Donate link: https://github.com/oakwoodgates/wontrapi-extension-demo
+ * Donate link: https://github.com/oakwoodgates/wontrapi-vc-rows
  * License:     GPLv2
- * Text Domain: wontrapi-extension-demo
+ * Text Domain: wontrapi-vc-rows
  * Domain Path: /languages
  *
- * @link    https://github.com/oakwoodgates/wontrapi-extension-demo
+ * @link    https://github.com/oakwoodgates/wontrapi-vc-rows
  *
- * @package Wontrapi_Extension_Demo
+ * @package Wontrapi_VC_Rows
  * @version 0.1.0
  *
  */
@@ -37,7 +37,7 @@
  */
 
 
-class Wontrapi_Extension_Demo {
+class Wontrapi_VC_Rows {
 
 	/**
 	 * Current version.
@@ -82,7 +82,7 @@ class Wontrapi_Extension_Demo {
 	/**
 	 * Singleton instance of plugin.
 	 *
-	 * @var    Wontrapi_Extension_Demo
+	 * @var    Wontrapi_VC_Rows
 	 * @since  0.1.0
 	 */
 	protected static $single_instance = null;
@@ -91,7 +91,7 @@ class Wontrapi_Extension_Demo {
 	 * Creates or returns an instance of this class.
 	 *
 	 * @since   0.1.0
-	 * @return  Wontrapi_Extension_Demo A single instance of this class.
+	 * @return  Wontrapi_VC_Rows A single instance of this class.
 	 */
 	public static function get_instance() {
 		if ( null === self::$single_instance ) {
@@ -131,7 +131,7 @@ class Wontrapi_Extension_Demo {
 	public function init() {
 
 		// Load translated strings for plugin.
-		load_plugin_textdomain( 'wontrapi-extension-demo', false, dirname( $this->basename ) . '/languages/' );
+		load_plugin_textdomain( 'wontrapi-vc-rows', false, dirname( $this->basename ) . '/languages/' );
 
 		$this->include_dependencies();
 
@@ -216,7 +216,7 @@ class Wontrapi_Extension_Demo {
 	public function requirements_not_met_notice() {
 
 		// Compile default message.
-		$default_message = sprintf( __( 'Wontrapi XD is missing requirements and has been <a href="%s">deactivated</a>. Please make sure all requirements are available.', 'wontrapi-extension-demo' ), admin_url( 'plugins.php' ) );
+		$default_message = sprintf( __( 'Wontrapi XD is missing requirements and has been <a href="%s">deactivated</a>. Please make sure all requirements are available.', 'wontrapi-vc-rows' ), admin_url( 'plugins.php' ) );
 
 		// Default details to null.
 		$details = null;
@@ -263,14 +263,14 @@ class Wontrapi_Extension_Demo {
 }
 
 /**
- * Grab the Wontrapi_Extension_Demo object and return it.
- * Wrapper for Wontrapi_Extension_Demo::get_instance().
+ * Grab the Wontrapi_VC_Rows object and return it.
+ * Wrapper for Wontrapi_VC_Rows::get_instance().
  *
  * @since  0.1.0
- * @return Wontrapi_Extension_Demo  Singleton instance of plugin class.
+ * @return Wontrapi_VC_Rows  Singleton instance of plugin class.
  */
 function wontrapi_xd() {
-	return Wontrapi_Extension_Demo::get_instance();
+	return Wontrapi_VC_Rows::get_instance();
 }
 
 // Kick it off.
@@ -294,7 +294,7 @@ if ( ! function_exists( 'wontrapi_xd_fs' ) ) {
 
 				$wontrapi_xd_fs = fs_dynamic_init( array(
 					'id'                  => '4748',
-					'slug'                => 'wontrapi-extension-demo',
+					'slug'                => 'wontrapi-vc-rows',
 					'type'                => 'plugin',
 					'public_key'          => 'pk_49ac0804e922f5071ca56690f44a1',
 					'is_premium'          => true,
