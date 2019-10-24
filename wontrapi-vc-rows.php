@@ -216,7 +216,7 @@ class Wontrapi_VC_Rows {
 	public function requirements_not_met_notice() {
 
 		// Compile default message.
-		$default_message = sprintf( __( 'Wontrapi XD is missing requirements and has been <a href="%s">deactivated</a>. Please make sure all requirements are available.', 'wontrapi-vc-rows' ), admin_url( 'plugins.php' ) );
+		$default_message = sprintf( __( 'Wontrapi VC Rows is missing requirements and has been <a href="%s">deactivated</a>. Please make sure all requirements are available.', 'wontrapi-vc-rows' ), admin_url( 'plugins.php' ) );
 
 		// Default details to null.
 		$details = null;
