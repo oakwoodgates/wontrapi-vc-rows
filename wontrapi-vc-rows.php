@@ -188,23 +188,12 @@ class Wontrapi_VC_Rows {
 	}
 
 	public function include_dependencies() {
-		// Init Freemius.
-		//wontrapi_fs();
-		// Signal that SDK was initiated.
-		//do_action( 'wontrapi_fs_loaded' );
-	}
-
-	/**
-	 * Deactivates this plugin, hook this function on admin_init.
-	 *
-	 * @since  0.1.0
-	 */
-	public function deactivate_me() {
-
-		// We do a check for deactivate_plugins before calling it, to protect
-		// any developers from accidentally calling it too early and breaking things.
-		if ( function_exists( 'deactivate_plugins' ) ) {
-			deactivate_plugins( $this->basename );
+		if ( $this->is_parent_loaded() ) {
+			$this->addon();
+		} else if ( $this->is_parent_active() ) {
+			add_action( 'wontrapi_fs_loaded', array( $this, 'addon' ) );
+		} else {
+			$this->addon();
 		}
 	}
 
@@ -233,6 +222,80 @@ class Wontrapi_VC_Rows {
 			<?php echo wp_kses_post( $details ); ?>
 		</div>
 		<?php
+	}
+
+	public function is_parent_loaded() {
+		if ( class_exists( 'Wontrapi' ) && ! empty( Wontrapi::$loaded ) ) {
+			return true;
+		}
+		return false;
+	}
+
+	public function is_parent_active() {
+		$active_plugins = get_option( 'active_plugins', array() );
+
+		if ( is_multisite() ) {
+			$network_active_plugins = get_site_option( 'active_sitewide_plugins', array() );
+			$active_plugins         = array_merge( $active_plugins, array_keys( $network_active_plugins ) );
+		}
+
+		foreach ( $active_plugins as $basename ) {
+			if ( 0 === strpos( $basename, 'wontrapi/' ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public function addon() {
+
+		global $wontrapi_vc_rows_fs;
+
+		if ( ! isset( $wontrapi_vc_rows_fs ) ) {
+
+			if ( file_exists( dirname( dirname( __FILE__ ) ) . '/wontrapi/vendor/freemius/start.php' ) ) {
+				require_once dirname( dirname( __FILE__ ) ) . '/wontrapi/vendor/freemius/start.php';
+
+				$wontrapi_vc_rows_fs = fs_dynamic_init( array(
+					'id'                  => '4877',
+					'slug'                => 'wontrapi-vc-rows',
+					'type'                => 'plugin',
+					'public_key'          => 'pk_a61d16974f99f0514c013fc6e8283',
+					'is_premium'          => true,
+					'is_premium_only'     => true,
+					'has_paid_plans'      => true,
+					'is_org_compliant'    => false,
+					'parent'              => array(
+						'id'         => '1284',
+						'slug'       => 'wontrapi',
+						'public_key' => 'pk_f3f99e224cd062ba9d7fda46ab973',
+						'name'       => 'Wontrapi',
+					),
+					'menu'                => array(
+					//	'slug'           => 'wontrapi-vc-rows',
+						'first-path'     => 'plugins.php',
+						'support'        => false,
+					),
+				) );
+			}
+		}
+
+		do_action( 'wontrapi_vc_rows_fs_loaded' );
+	}
+
+	/**
+	 * Deactivates this plugin, hook this function on admin_init.
+	 *
+	 * @since  0.1.0
+	 */
+	public function deactivate_me() {
+
+		// We do a check for deactivate_plugins before calling it, to protect
+		// any developers from accidentally calling it too early and breaking things.
+		if ( function_exists( 'deactivate_plugins' ) ) {
+			deactivate_plugins( $this->basename );
+		}
 	}
 
 	/**
@@ -279,92 +342,3 @@ add_action( 'plugins_loaded', array( wontrapi_vc_rows(), 'hooks' ) );
 // Activation and deactivation.
 register_activation_hook( __FILE__, array( wontrapi_vc_rows(), '_activate' ) );
 register_deactivation_hook( __FILE__, array( wontrapi_vc_rows(), '_deactivate' ) );
-
-if ( ! function_exists( 'wontrapi_vc_rows_fs' ) ) {
-	// Create a helper function for easy SDK access.
-	function wontrapi_vc_rows_fs() {
-		global $wontrapi_vc_rows_fs;
-
-		if ( ! isset( $wontrapi_vc_rows_fs ) ) {
-
-			// Include Freemius SDK.
-			if ( file_exists( dirname( dirname( __FILE__ ) ) . '/wontrapi/vendor/freemius/start.php' ) ) {
-				// Try to load SDK from parent plugin folder.
-				require_once dirname( dirname( __FILE__ ) ) . '/wontrapi/vendor/freemius/start.php';
-
-				$wontrapi_vc_rows_fs = fs_dynamic_init( array(
-					'id'                  => '4877',
-					'slug'                => 'wontrapi-vc-rows',
-					'type'                => 'plugin',
-					'public_key'          => 'pk_a61d16974f99f0514c013fc6e8283',
-					'is_premium'          => true,
-					'is_premium_only'     => true,
-					'has_paid_plans'      => true,
-					'is_org_compliant'    => false,
-					'parent'              => array(
-						'id'         => '1284',
-						'slug'       => 'wontrapi',
-						'public_key' => 'pk_f3f99e224cd062ba9d7fda46ab973',
-						'name'       => 'Wontrapi',
-					),
-					'menu'                => array(
-					//	'slug'           => 'wontrapi-vc-rows',
-						'first-path'     => 'plugins.php',
-						'support'        => false,
-					),
-				) );
-			}
-
-			return $wontrapi_vc_rows_fs;
-		}
-	}
-}
-
-
-function wontrapi_vc_rows_fs_is_parent_active_and_loaded() {
-	// Check if the parent's init SDK method exists.
-	return function_exists( 'wontrapi_fs' );
-}
-
-function wontrapi_vc_rows_fs_is_parent_active() {
-	$active_plugins = get_option( 'active_plugins', array() );
-
-	if ( is_multisite() ) {
-		$network_active_plugins = get_site_option( 'active_sitewide_plugins', array() );
-		$active_plugins         = array_merge( $active_plugins, array_keys( $network_active_plugins ) );
-	}
-
-	foreach ( $active_plugins as $basename ) {
-		if ( 0 === strpos( $basename, 'wontrapi/' ) ) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-function wontrapi_vc_rows_fs_init() {
-	if ( wontrapi_vc_rows_fs_is_parent_active_and_loaded() ) {
-		// Init Freemius.
-		wontrapi_vc_rows_fs();
-
-		// Signal that the add-on's SDK was initiated.
-		do_action( 'wontrapi_vc_rows_fs_loaded' );
-
-		// Parent is active, add your init code here.
-
-	} else {
-		// Parent is inactive, add your error handling here.
-	}
-}
-
-if ( wontrapi_vc_rows_fs_is_parent_active_and_loaded() ) {
-	// If parent already included, init add-on.
-	wontrapi_vc_rows_fs_init();
-} else if ( wontrapi_vc_rows_fs_is_parent_active() ) {
-	// Init add-on only after the parent is loaded.
-	add_action( 'wontrapi_fs_loaded', 'wontrapi_vc_rows_fs_init' );
-} else {
-	// Even though the parent is not activated, execute add-on for activation / uninstall hooks.
-	wontrapi_vc_rows_fs_init();
-}
