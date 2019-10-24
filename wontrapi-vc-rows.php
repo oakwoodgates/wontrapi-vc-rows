@@ -269,34 +269,34 @@ class Wontrapi_VC_Rows {
  * @since  0.1.0
  * @return Wontrapi_VC_Rows  Singleton instance of plugin class.
  */
-function wontrapi_xd() {
+function wontrapi_vc_rows() {
 	return Wontrapi_VC_Rows::get_instance();
 }
 
 // Kick it off.
-add_action( 'plugins_loaded', array( wontrapi_xd(), 'hooks' ) );
+add_action( 'plugins_loaded', array( wontrapi_vc_rows(), 'hooks' ) );
 
 // Activation and deactivation.
-register_activation_hook( __FILE__, array( wontrapi_xd(), '_activate' ) );
-register_deactivation_hook( __FILE__, array( wontrapi_xd(), '_deactivate' ) );
+register_activation_hook( __FILE__, array( wontrapi_vc_rows(), '_activate' ) );
+register_deactivation_hook( __FILE__, array( wontrapi_vc_rows(), '_deactivate' ) );
 
-if ( ! function_exists( 'wontrapi_xd_fs' ) ) {
+if ( ! function_exists( 'wontrapi_vc_rows_fs' ) ) {
 	// Create a helper function for easy SDK access.
-	function wontrapi_xd_fs() {
-		global $wontrapi_xd_fs;
+	function wontrapi_vc_rows_fs() {
+		global $wontrapi_vc_rows_fs;
 
-		if ( ! isset( $wontrapi_xd_fs ) ) {
+		if ( ! isset( $wontrapi_vc_rows_fs ) ) {
 
 			// Include Freemius SDK.
 			if ( file_exists( dirname( dirname( __FILE__ ) ) . '/wontrapi/vendor/freemius/start.php' ) ) {
 				// Try to load SDK from parent plugin folder.
 				require_once dirname( dirname( __FILE__ ) ) . '/wontrapi/vendor/freemius/start.php';
 
-				$wontrapi_xd_fs = fs_dynamic_init( array(
-					'id'                  => '4748',
+				$wontrapi_vc_rows_fs = fs_dynamic_init( array(
+					'id'                  => '4877',
 					'slug'                => 'wontrapi-vc-rows',
 					'type'                => 'plugin',
-					'public_key'          => 'pk_49ac0804e922f5071ca56690f44a1',
+					'public_key'          => 'pk_a61d16974f99f0514c013fc6e8283',
 					'is_premium'          => true,
 					'is_premium_only'     => true,
 					'has_paid_plans'      => true,
@@ -308,24 +308,25 @@ if ( ! function_exists( 'wontrapi_xd_fs' ) ) {
 						'name'       => 'Wontrapi',
 					),
 					'menu'                => array(
+					//	'slug'           => 'wontrapi-vc-rows',
 						'first-path'     => 'plugins.php',
 						'support'        => false,
 					),
 				) );
 			}
 
-			return $wontrapi_xd_fs;
+			return $wontrapi_vc_rows_fs;
 		}
 	}
 }
 
 
-function wontrapi_xd_fs_is_parent_active_and_loaded() {
+function wontrapi_vc_rows_fs_is_parent_active_and_loaded() {
 	// Check if the parent's init SDK method exists.
 	return function_exists( 'wontrapi_fs' );
 }
 
-function wontrapi_xd_fs_is_parent_active() {
+function wontrapi_vc_rows_fs_is_parent_active() {
 	$active_plugins = get_option( 'active_plugins', array() );
 
 	if ( is_multisite() ) {
@@ -342,13 +343,13 @@ function wontrapi_xd_fs_is_parent_active() {
 	return false;
 }
 
-function wontrapi_xd_fs_init() {
-	if ( wontrapi_xd_fs_is_parent_active_and_loaded() ) {
+function wontrapi_vc_rows_fs_init() {
+	if ( wontrapi_vc_rows_fs_is_parent_active_and_loaded() ) {
 		// Init Freemius.
-		wontrapi_xd_fs();
+		wontrapi_vc_rows_fs();
 
 		// Signal that the add-on's SDK was initiated.
-		do_action( 'wontrapi_xd_fs_loaded' );
+		do_action( 'wontrapi_vc_rows_fs_loaded' );
 
 		// Parent is active, add your init code here.
 
@@ -357,13 +358,13 @@ function wontrapi_xd_fs_init() {
 	}
 }
 
-if ( wontrapi_xd_fs_is_parent_active_and_loaded() ) {
+if ( wontrapi_vc_rows_fs_is_parent_active_and_loaded() ) {
 	// If parent already included, init add-on.
-	wontrapi_xd_fs_init();
-} else if ( wontrapi_xd_fs_is_parent_active() ) {
+	wontrapi_vc_rows_fs_init();
+} else if ( wontrapi_vc_rows_fs_is_parent_active() ) {
 	// Init add-on only after the parent is loaded.
-	add_action( 'wontrapi_fs_loaded', 'wontrapi_xd_fs_init' );
+	add_action( 'wontrapi_fs_loaded', 'wontrapi_vc_rows_fs_init' );
 } else {
 	// Even though the parent is not activated, execute add-on for activation / uninstall hooks.
-	wontrapi_xd_fs_init();
+	wontrapi_vc_rows_fs_init();
 }
