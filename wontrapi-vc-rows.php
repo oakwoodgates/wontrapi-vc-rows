@@ -342,3 +342,107 @@ add_action( 'plugins_loaded', array( wontrapi_vc_rows(), 'hooks' ) );
 // Activation and deactivation.
 register_activation_hook( __FILE__, array( wontrapi_vc_rows(), '_activate' ) );
 register_deactivation_hook( __FILE__, array( wontrapi_vc_rows(), '_deactivate' ) );
+
+
+/*
+function bt_vc_before_init() {
+
+	// Set the parameters for options in the Element(s) settings
+	$attributes = array(
+		array(
+			'type' => 'dropdown',
+			'heading' => __( 'Show when', 'bt'),
+			'param_name' => 'bt_op_if_tags',
+			'value' => array(
+				__( 'Always Show', 'btc' ) => 0,
+				__( 'Show only if user has ALL chosen tags', 'bt' ) => 'all',
+				__( 'Show if user has ANY chosen tags', 'bt' ) => 'any',
+				__( 'Hide if user has ANY chosen tags', 'bt' ) => 'notany',
+			),
+			'group' => esc_html__( 'Ontraport', 'bt' ),
+			'description' => __( 'Show or hide this element based on a Contact\'s tags', 'bt' ),
+		),
+		array(
+			'type' => 'textfield',
+			'heading' => __( 'Tags to determine element visibility', 'bt' ),
+			'param_name' => 'bt_op_if_tags_data',
+			'group' => esc_html__( 'Ontraport', 'bt' ),
+			'description' => __( 'Use tag ID(s). Separate multiple tags with a comma and a space. ex: 123, 456', 'bt' ),
+		),
+	);
+
+	// Elements this should be applied to
+	$elements = array( 'vc_row', 'vc_row_inner' );
+
+	// Add parameters to the VC element types we want to be able to use this with
+	foreach ( $elements as $element ) {
+		vc_add_params( $element, $attributes );
+	}
+
+}
+add_action( 'vc_before_init', 'bt_vc_before_init', 40 );
+
+
+function bt_vc_op_output_filter( $output, $class, $atts ) {
+
+	if ( ! empty( $atts['bt_op_if_tags'] ) ) { 
+
+		if ( ! class_exists( 'Wontrapi' ) ) 
+			return $output;
+
+		if ( empty( $atts['bt_op_if_tags'] ) )
+			return $output;
+
+		$type = $atts['bt_op_if_tags'];
+
+		$tags = explode( ', ', $atts['bt_op_if_tags_data'] );
+	
+		if ( empty( $tags ) ) 
+			return $output;
+
+		$contact = Wontrapi_Cache::get_current(); 
+
+		if ( 'all' === $type ) {
+
+			if ( ! $contact ) 
+				return '';
+
+			foreach ( $tags as $tag ) {
+				if ( ! WontrapiHelp::contact_has_tag( $contact, $tag ) ) {
+					return '';
+				}
+			}
+			return $output;
+
+		} elseif ( 'any' === $type ) {
+
+			if ( ! $contact ) 
+				return '';
+
+			foreach ( $tags as $tag ) {
+				if ( WontrapiHelp::contact_has_tag( $contact, $tag ) ) {
+					return $output;
+				}
+			}
+			return '';
+
+		} elseif ( 'notany' === $type ) {
+
+			if ( ! $contact ) 
+				return $output;
+
+			foreach ( $tags as $tag ) {
+				if ( ! WontrapiHelp::contact_has_tag( $contact, $tag ) ) {
+					return '';
+				}
+			}
+			return $output;
+
+		}
+	}
+	return $output;
+}
+// Add filter to output with a high number so it runs last
+add_filter( 'vc_shortcode_output', 'bt_vc_op_output_filter', 9999, 3 );
+*/
+
